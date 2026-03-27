@@ -1,6 +1,5 @@
 # travel-planner-kz
 Travel Planner for Kazakhstan — Angular + Django | KBTU Web Dev 2026
-# Travel Planner KZ 🇰🇿
 
 # Travel Planner KZ 🇰🇿
 
@@ -10,7 +9,7 @@ Smart travel guide for Kazakhstan — build day-by-day itineraries by city, budg
 
 | Name | GitHub |
 |------|--------|
-| Name 1 | @username1 |
+| Amina Zhumatayeva | Aminasssssss |
 | Name 2 | @username2 |
 | Name 3 | @username3 |
 
