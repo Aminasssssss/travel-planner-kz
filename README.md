@@ -10,7 +10,7 @@ Smart travel guide for Kazakhstan — build day-by-day itineraries by city, budg
 | Name | GitHub |
 |------|--------|
 | Amina Zhumatayeva | Aminasssssss |
-| Name 2 | @username2 |
+| Kelgenbayeva Sandugash | sleepiingatlast |
 | Name 3 | @username3 |
 
 ## Tech Stack
