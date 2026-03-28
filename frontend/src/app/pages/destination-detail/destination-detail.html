@@ -1,0 +1,48 @@
+<div class="page">
+  <nav class="navbar">
+    <div class="nav-brand" (click)="router.navigate(['/'])">🇰🇿 Travel KZ</div>
+    <div class="nav-links">
+      <a (click)="router.navigate(['/destinations'])">← Back</a>
+      <a (click)="router.navigate(['/planner'])">Plan Trip</a>
+    </div>
+  </nav>
+
+  @if (destination) {
+    <div class="hero">
+      <div class="hero-letter">{{ destination.name[0] }}</div>
+      <div class="hero-info">
+        <h1>{{ destination.name }}</h1>
+        <p>{{ destination.description }}</p>
+        <span class="badge">Best in: {{ destination.season_best }}</span>
+      </div>
+    </div>
+  }
+
+  <div class="content">
+    <div class="section-header">
+      <h2>Places to visit</h2>
+      <button class="btn-plan" (click)="router.navigate(['/planner'])">
+        Plan a trip here →
+      </button>
+    </div>
+
+    <div class="places-grid">
+      @for (place of places; track place.id) {
+        <div class="place-card">
+          <div class="place-header">
+            <h3>{{ place.name }}</h3>
+            <span class="rating">⭐ {{ place.rating }}</span>
+          </div>
+          <p>{{ place.description }}</p>
+          <div class="place-footer">
+            <span class="price price-{{ place.price_level }}">{{ place.price_level }}</span>
+            @if (place.open_hours) {
+              <span class="hours">🕐 {{ place.open_hours }}</span>
+            }
+            <button class="btn-save" (click)="savePlace(place.id)">♡ Save</button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

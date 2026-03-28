@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import Destination, Category, Place, Itinerary, ItineraryDay, PlaceReview, SavedPlace
 
 
-# ── ModelSerializers ──────────────────────────────────────────────
+#ModelSerializers
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

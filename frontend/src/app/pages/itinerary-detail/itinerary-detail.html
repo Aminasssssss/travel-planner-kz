@@ -1,0 +1,53 @@
+<div class="page">
+  <nav class="navbar">
+    <div class="nav-brand" (click)="router.navigate(['/'])">🇰🇿 Travel KZ</div>
+    <div class="nav-links">
+      <a (click)="router.navigate(['/my-trips'])">← My Trips</a>
+      <a (click)="router.navigate(['/planner'])">Plan New Trip</a>
+    </div>
+  </nav>
+
+  @if (itinerary) {
+    <div class="hero">
+      <div class="hero-info">
+        <h1>{{ itinerary.title }}</h1>
+        <div class="meta">
+          <span>📅 {{ itinerary.duration_days }} days</span>
+          <span>💰 {{ itinerary.budget_level }}</span>
+          <span>📍 {{ itinerary.destination?.name }}</span>
+        </div>
+      </div>
+      <button class="btn-delete" (click)="delete()">🗑 Delete</button>
+    </div>
+
+    <div class="content">
+      @for (day of itinerary.days; track day.id) {
+        <div class="day-card">
+          <div class="day-header">
+            <h2>Day {{ day.day_number }}</h2>
+            @if (day.transport_note) {
+              <span class="transport">🚌 {{ day.transport_note }}</span>
+            }
+          </div>
+
+          <div class="places-list">
+            @for (place of day.places; track place.id) {
+              <div class="place-item">
+                <div class="place-info">
+                  <h4>{{ place.name }}</h4>
+                  <p>{{ place.description }}</p>
+                </div>
+                <div class="place-meta">
+                  <span class="rating">⭐ {{ place.rating }}</span>
+                  <span class="price price-{{ place.price_level }}">{{ place.price_level }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="loading">Loading your itinerary...</div>
+  }
+</div>

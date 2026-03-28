@@ -1,0 +1,48 @@
+<div class="page">
+  <nav class="navbar">
+    <div class="nav-brand" (click)="router.navigate(['/'])">🇰🇿 Travel KZ</div>
+    <div class="nav-links">
+      <a (click)="router.navigate(['/'])">Home</a>
+      <a (click)="router.navigate(['/planner'])">Plan New Trip</a>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div class="page-header">
+      <h1>My Trips</h1>
+      <button class="btn-new" (click)="router.navigate(['/planner'])">
+        + Plan New Trip
+      </button>
+    </div>
+
+    @if (itineraries.length === 0) {
+      <div class="empty">
+        <div class="empty-icon">🗺️</div>
+        <h3>No trips yet</h3>
+        <p>Plan your first trip to Kazakhstan!</p>
+        <button class="btn-plan" (click)="router.navigate(['/planner'])">
+          Plan a Trip →
+        </button>
+      </div>
+    } @else {
+      <div class="trips-grid">
+        @for (trip of itineraries; track trip.id) {
+          <div class="trip-card">
+            <div class="trip-header">
+              <h3>{{ trip.title }}</h3>
+              <button class="btn-delete" (click)="delete(trip.id)">🗑</button>
+            </div>
+            <div class="trip-meta">
+              <span>📅 {{ trip.duration_days }} days</span>
+              <span>💰 {{ trip.budget_level }}</span>
+              <span>📍 {{ trip.destination?.name }}</span>
+            </div>
+            <button class="btn-view" (click)="router.navigate(['/itinerary', trip.id])">
+              View Itinerary →
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
