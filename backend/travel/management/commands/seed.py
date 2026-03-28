@@ -3,13 +3,11 @@ from travel.models import Destination, Category, Place
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        # Categories
         cats = {}
         for name in ['nature', 'history', 'food', 'active', 'photo']:
             c, _ = Category.objects.get_or_create(name=name)
             cats[name] = c
 
-        # Almaty
         almaty, _ = Destination.objects.get_or_create(
             name='Almaty', region='almaty',
             defaults={'description': 'Largest city of Kazakhstan', 'season_best': 'all', 'image_url': ''}

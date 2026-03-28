@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# Custom Manager
 class PlaceManager(models.Manager):
     def by_category(self, category):
         return self.filter(category=category)

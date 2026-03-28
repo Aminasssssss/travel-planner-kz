@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from .models import Destination, Category, Place, Itinerary, ItineraryDay, PlaceReview, SavedPlace
 
 
-#ModelSerializers
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,7 +75,6 @@ class SavedPlaceSerializer(serializers.ModelSerializer):
         fields = ['id', 'note', 'added_at', 'place', 'place_id']
 
 
-# ── Custom Serializers (serializers.Serializer) ───────────────────
 
 class ItineraryGenerateSerializer(serializers.Serializer):
     destination_id = serializers.IntegerField()

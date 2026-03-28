@@ -12,7 +12,6 @@ from .serializers import (
 )
 
 
-# ── AUTH ──────────────────────────────────────────────────────────
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -31,7 +30,6 @@ def register(request):
     return Response({'message': 'User created', 'id': user.id}, status=201)
 
 
-# ── CBV: Destinations ─────────────────────────────────────────────
 
 class DestinationListView(generics.ListAPIView):
     queryset = Destination.objects.all()
@@ -48,7 +46,6 @@ class DestinationPlacesView(generics.ListAPIView):
         return Place.objects.filter(destination_id=destination_id)
 
 
-# ── CBV: Itineraries ──────────────────────────────────────────────
 
 class ItineraryListCreateView(generics.ListCreateAPIView):
     serializer_class = ItinerarySerializer
@@ -69,7 +66,6 @@ class ItineraryDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Itinerary.objects.filter(user=self.request.user)
 
 
-# ── CBV: Saved Places ─────────────────────────────────────────────
 
 class SavedPlaceListCreateView(generics.ListCreateAPIView):
     serializer_class = SavedPlaceSerializer
@@ -82,7 +78,6 @@ class SavedPlaceListCreateView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 
-# ── FBV: Generate Itinerary ───────────────────────────────────────
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -102,7 +97,6 @@ def generate_itinerary(request):
     except Destination.DoesNotExist:
         return Response({'error': 'Destination not found'}, status=404)
 
-    # Get places matching interests and budget
     places = Place.objects.filter(
         destination=destination,
         price_level=budget_level,
@@ -115,7 +109,6 @@ def generate_itinerary(request):
     places = list(places)
     places_per_day = 3
 
-    # Create itinerary
     itinerary = Itinerary.objects.create(
         title=f"{duration_days}-day trip to {destination.name}",
         duration_days=duration_days,
@@ -125,7 +118,6 @@ def generate_itinerary(request):
         is_public=False
     )
 
-    # Assign places to days
     for day_num in range(1, duration_days + 1):
         day = ItineraryDay.objects.create(
             itinerary=itinerary,
@@ -141,7 +133,6 @@ def generate_itinerary(request):
     return Response(result, status=201)
 
 
-# ── FBV: Popular Places ───────────────────────────────────────────
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -151,7 +142,6 @@ def popular_places(request):
     return Response(serializer.data)
 
 
-# ── FBV: Budget Estimate ──────────────────────────────────────────
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -178,7 +168,6 @@ def budget_estimate(request):
     })
 
 
-# ── FBV: Create Review ────────────────────────────────────────────
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
