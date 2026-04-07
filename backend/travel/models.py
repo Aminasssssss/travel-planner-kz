@@ -23,7 +23,7 @@ class Destination(models.Model):
         ('other', 'Other'),
     ]
     name = models.CharField(max_length=200)
-    region = models.CharField(max_length=100, choices=REGION_CHOICES)
+    region = models.CharField(max_length=100)   
     description = models.TextField()
     season_best = models.CharField(max_length=50)  # e.g. 'summer', 'winter', 'all'
     image_url = models.URLField(blank=True)
@@ -39,6 +39,11 @@ class Category(models.Model):
         ('food', 'Food'),
         ('active', 'Active'),
         ('photo', 'Photo Spots'),
+        ('culture', 'Culture'),
+        ('nightlife', 'Nightlife'),
+        ('shopping', 'Shopping'),
+        ('family', 'Family'),
+        ('lifestyle', 'Lifestyle'),
     ]
     name = models.CharField(max_length=100, choices=CATEGORY_CHOICES, unique=True)
 
@@ -59,6 +64,11 @@ class Place(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     rating = models.FloatField(default=0.0)
+    price_tenge = models.IntegerField(default=0)
+    best_season = models.CharField(max_length=100, blank=True)
+    duration_hours = models.FloatField(default=2.0)
+    tags = models.CharField(max_length=300, blank=True)
+    is_indoor = models.BooleanField(default=False)
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='places')
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='places')
 

@@ -1,68 +1,65 @@
 from django.core.management.base import BaseCommand
 from travel.models import Destination, Category, Place
+import pandas as pd
+import os
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        cats = {}
-        for name in ['nature', 'history', 'food', 'active', 'photo']:
-            c, _ = Category.objects.get_or_create(name=name)
-            cats[name] = c
+        Place.objects.all().delete()
+        Category.objects.all().delete()
+        Destination.objects.all().delete()
 
-        almaty, _ = Destination.objects.get_or_create(
-            name='Almaty', region='almaty',
-            defaults={'description': 'Largest city of Kazakhstan', 'season_best': 'all', 'image_url': ''}
-        )
-        Place.objects.get_or_create(name='Big Almaty Lake', defaults={
-            'description': 'Beautiful mountain lake', 'price_level': 'budget',
-            'latitude': 43.05, 'longitude': 76.98, 'rating': 4.8,
-            'destination': almaty, 'category': cats['nature']
-        })
-        Place.objects.get_or_create(name='Shymbulak Ski Resort', defaults={
-            'description': 'Top ski resort', 'price_level': 'luxury',
-            'latitude': 43.14, 'longitude': 76.99, 'rating': 4.7,
-            'destination': almaty, 'category': cats['active']
-        })
-        Place.objects.get_or_create(name='Green Bazaar', defaults={
-            'description': 'Famous local market', 'price_level': 'budget',
-            'latitude': 43.25, 'longitude': 76.94, 'rating': 4.3,
-            'destination': almaty, 'category': cats['food']
-        })
-        Place.objects.get_or_create(name='Zenkov Cathedral', defaults={
-            'description': 'Historic wooden cathedral', 'price_level': 'budget',
-            'latitude': 43.26, 'longitude': 76.95, 'rating': 4.6,
-            'destination': almaty, 'category': cats['history']
-        })
+        categories = {}
+        for cat in ['active', 'nature', 'history', 'food', 'photo', 'culture', 'nightlife', 'shopping', 'family', 'lifestyle']:
+            c, _ = Category.objects.get_or_create(name=cat)
+            categories[cat] = c
 
-        # Astana
-        astana, _ = Destination.objects.get_or_create(
-            name='Astana', region='astana',
-            defaults={'description': 'Capital of Kazakhstan', 'season_best': 'summer', 'image_url': ''}
-        )
-        Place.objects.get_or_create(name='Baiterek Tower', defaults={
-            'description': 'Symbol of Astana', 'price_level': 'mid',
-            'latitude': 51.12, 'longitude': 71.43, 'rating': 4.5,
-            'destination': astana, 'category': cats['photo']
-        })
-        Place.objects.get_or_create(name='Khan Shatyr', defaults={
-            'description': 'Giant transparent tent', 'price_level': 'mid',
-            'latitude': 51.13, 'longitude': 71.40, 'rating': 4.4,
-            'destination': astana, 'category': cats['active']
-        })
-        Place.objects.get_or_create(name='National Museum', defaults={
-            'description': 'History of Kazakhstan', 'price_level': 'budget',
-            'latitude': 51.18, 'longitude': 71.44, 'rating': 4.3,
-            'destination': astana, 'category': cats['history']
-        })
+        excel_path = os.path.join(os.path.dirname(__file__), 'kazakhstan_tourism_FULL_v5.xlsx')
+        df = pd.read_excel(excel_path, sheet_name='Места (Places)')
 
-        # Turkestan
-        turkestan, _ = Destination.objects.get_or_create(
-            name='Turkestan', region='turkestan',
-            defaults={'description': 'Ancient city, spiritual capital', 'season_best': 'spring', 'image_url': ''}
-        )
-        Place.objects.get_or_create(name='Khoja Ahmed Yasawi Mausoleum', defaults={
-            'description': 'UNESCO World Heritage Site', 'price_level': 'budget',
-            'latitude': 43.29, 'longitude': 68.27, 'rating': 4.9,
-            'destination': turkestan, 'category': cats['history']
-        })
+        budget_map = {0: 'budget', 1: 'budget', 2: 'mid', 3: 'luxury'}
+        destinations = {}
 
-        self.stdout.write(self.style.SUCCESS('Seed data created successfully!'))
+        for _, row in df.iterrows():
+            city = str(row['Город'])
+            region = str(row['Регион'])
+            if city not in destinations:
+                d, _ = Destination.objects.get_or_create(
+                    name=city,
+                    defaults={
+                        'region': region,
+                        'description': f'{city} — beautiful city in Kazakhstan',
+                        'season_best': 'all',
+                        'image_url': ''
+                    }
+                )
+                destinations[city] = d
+
+        count = 0
+        for _, row in df.iterrows():
+            city = str(row['Город'])
+            category = str(row['Категория'])
+            price_num = int(row['Цена (уровень 0–3)']) if pd.notna(row['Цена (уровень 0–3)']) else 1
+            price_level = budget_map.get(price_num, 'budget')
+
+            Place.objects.get_or_create(
+                name=str(row['Название']),
+                destination=destinations[city],
+                defaults={
+                    'description': str(row['Описание EN'])[:500] if pd.notna(row['Описание EN']) else '',
+                    'price_level': price_level,
+                    'price_tenge': int(row['Цена (тенге)']) if pd.notna(row['Цена (тенге)']) else 0,
+                    'open_hours': str(row['Часы работы'])[:100] if pd.notna(row['Часы работы']) else '',
+                    'best_season': str(row['Лучший сезон'])[:100] if pd.notna(row['Лучший сезон']) else 'all',
+                    'duration_hours': float(row['Продолж. (часы)']) if pd.notna(row['Продолж. (часы)']) else 2.0,
+                    'latitude': float(row['Широта']) if pd.notna(row['Широта']) else 0,
+                    'longitude': float(row['Долгота']) if pd.notna(row['Долгота']) else 0,
+                    'rating': float(row['Рейтинг']) if pd.notna(row['Рейтинг']) else 4.0,
+                    'tags': str(row['Теги'])[:300] if pd.notna(row['Теги']) else '',
+                    'is_indoor': bool(int(row['Внутри (0/1)'])) if pd.notna(row['Внутри (0/1)']) else False,
+                    'category': categories.get(category, categories['nature']),
+                }
+            )
+            count += 1
+
+        self.stdout.write(self.style.SUCCESS(f'Seeded {count} places across {len(destinations)} cities!'))
