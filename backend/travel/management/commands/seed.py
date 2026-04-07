@@ -14,7 +14,7 @@ class Command(BaseCommand):
             c, _ = Category.objects.get_or_create(name=cat)
             categories[cat] = c
 
-        excel_path = os.path.join(os.path.dirname(__file__), 'kazakhstan_tourism_FULL_v5.xlsx')
+        excel_path = os.path.join(os.path.dirname(__file__), 'kazakhstan_tourism_FINAL_v7.xlsx')
         df = pd.read_excel(excel_path, sheet_name='Места (Places)')
 
         budget_map = {0: 'budget', 1: 'budget', 2: 'mid', 3: 'luxury'}

@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/saved-places/', views.SavedPlaceListCreateView.as_view()),
 
     path('api/budget/estimate/', views.budget_estimate),
+    path('api/places/recommend/', views.recommend_places),
 ]

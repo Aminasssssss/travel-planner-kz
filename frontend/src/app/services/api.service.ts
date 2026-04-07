@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -9,14 +9,6 @@ export class ApiService {
   private baseUrl = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
-
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('access_token');
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {})
-    });
-  }
 
   login(username: string, password: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/login/`, { username, password });
@@ -39,23 +31,23 @@ export class ApiService {
   }
 
   getMyItineraries(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/itineraries/`, { headers: this.getHeaders() });
+    return this.http.get<any[]>(`${this.baseUrl}/itineraries/`);
   }
 
   generateItinerary(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/itineraries/generate/`, data, { headers: this.getHeaders() });
+    return this.http.post(`${this.baseUrl}/itineraries/generate/`, data);
   }
 
   getItinerary(id: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/itineraries/${id}/`, { headers: this.getHeaders() });
+    return this.http.get(`${this.baseUrl}/itineraries/${id}/`);
   }
 
   updateItinerary(id: number, data: any): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/itineraries/${id}/`, data, { headers: this.getHeaders() });
+    return this.http.patch(`${this.baseUrl}/itineraries/${id}/`, data);
   }
 
   deleteItinerary(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/itineraries/${id}/`, { headers: this.getHeaders() });
+    return this.http.delete(`${this.baseUrl}/itineraries/${id}/`);
   }
 
   getBudgetEstimate(params: any): Observable<any> {
@@ -63,10 +55,15 @@ export class ApiService {
   }
 
   getSavedPlaces(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/saved-places/`, { headers: this.getHeaders() });
+    return this.http.get<any[]>(`${this.baseUrl}/saved-places/`);
   }
 
   savePlace(placeId: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/saved-places/`, { place_id: placeId }, { headers: this.getHeaders() });
+    return this.http.post(`${this.baseUrl}/saved-places/`, { place_id: placeId });
+  }
+  getRecommendedPlaces(destinationId: number, placeId?: number): Observable<any[]> {
+    const params: any = { destination_id: destinationId };
+    if (placeId) params.place_id = placeId;
+    return this.http.get<any[]>(`${this.baseUrl}/places/recommend/`, { params });
   }
 }

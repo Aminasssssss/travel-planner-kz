@@ -29,6 +29,7 @@ export class Login {
     this.api.login(this.username, this.password).subscribe({
       next: (data: any) => {
         localStorage.setItem('access_token', data.access);
+        localStorage.setItem('refresh_token', data.refresh);
         this.router.navigate(['/']);
       },
       error: () => {
