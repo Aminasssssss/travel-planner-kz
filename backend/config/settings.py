@@ -1,12 +1,12 @@
 from pathlib import Path
 from datetime import timedelta
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-travel-planner-kz-change-in-prod'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
@@ -90,11 +90,14 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200',
 ]
-UNSPLASH_ACCESS_KEY = 'LsX8FKobIuhEoU9OovkwVjPu8dpSWh2aUSBnVbCKFN4'
-OPENWEATHER_API_KEY = '7585eeb13e05a595c4337d913005802e'
-GEMINI_API_KEY = 'AIzaSyDCvFu3La6xjE9s_-eT_NAFOom7lIZPZvw'
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-travel-planner-kz')
+UNSPLASH_ACCESS_KEY = os.environ.get('UNSPLASH_ACCESS_KEY', '')
+OPENWEATHER_API_KEY = os.environ.get('OPENWEATHER_API_KEY', '')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
