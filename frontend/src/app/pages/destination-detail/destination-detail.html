@@ -1,0 +1,124 @@
+<div class="page">
+  <nav class="navbar">
+    <div class="nav-brand" (click)="router.navigate(['/'])">🇰🇿 Travel KZ</div>
+    <div class="nav-links">
+      <a (click)="router.navigate(['/destinations'])">← Back</a>
+      <a (click)="router.navigate(['/planner'])">Plan Trip</a>
+    </div>
+  </nav>
+
+  @if (destination) {
+    <div class="hero">
+      <div class="hero-letter">{{ destination.name[0] }}</div>
+      <div class="hero-info">
+        <h1>{{ destination.name }}</h1>
+        <p>{{ destination.description }}</p>
+        <div class="hero-badges">
+          <span class="badge">Best in: {{ destination.season_best }}</span>
+          <button class="btn-events" (click)="router.navigate(['/city', destination.id, 'events'])">
+            🎭 Афиша
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (weather && !weather.error) {
+      <div class="weather-widget">
+        <div class="weather-main">
+          <img [src]="weather.icon" width="60" alt="weather">
+          <div>
+            <span class="temp">{{ weather.temp }}°C</span>
+            <span class="feels">Ощущается {{ weather.feels_like }}°C</span>
+          </div>
+        </div>
+        <div class="weather-info">
+          <span>{{ weather.description }}</span>
+          <span>💧 {{ weather.humidity }}%</span>
+          <span>💨 {{ weather.wind }} м/с</span>
+        </div>
+        <div class="weather-recommendation">{{ weather.recommendation }}</div>
+      </div>
+    }
+
+    <div class="map-wrapper">
+      @if (filteredPlaces.length > 0) {
+        <app-map [places]="filteredPlaces" [zoom]="4"></app-map>
+      }
+    </div>
+
+    <div class="quick-filters">
+      <span class="filter-label">🔍 Быстрые фильтры:</span>
+
+      <button class="filter-btn" [class.active]="priceFilter === 'budget'" (click)="togglePriceFilter('budget')">
+        💰 Бюджетные
+      </button>
+
+      <button class="filter-btn" [class.active]="priceFilter === 'premium'" (click)="togglePriceFilter('premium')">
+        💎 Премиум
+      </button>
+
+      <button class="filter-btn" [class.active]="showTopRated" (click)="toggleTopRated()">
+        ⭐ Топ-10
+      </button>
+
+      <button class="filter-btn" [class.active]="indoorFilter === true" (click)="toggleIndoorFilter(true)">
+        🏠 В помещении
+      </button>
+
+      <button class="filter-btn" [class.active]="indoorFilter === false" (click)="toggleIndoorFilter(false)">
+        🌤️ На улице
+      </button>
+
+      @if (hasActiveFilters()) {
+        <button class="filter-clear" (click)="clearFilters()">
+          ✕ Сбросить
+        </button>
+      }
+    </div>
+
+    @if (hasActiveFilters()) {
+      <div class="active-filters-info">
+        ✅ {{ activeFilters.join(' + ') }} ({{ filteredPlaces.length }} мест)
+      </div>
+    }
+  }
+
+  <div class="content">
+    <div class="section-header">
+      <h2>Places to visit</h2>
+      <button class="btn-plan" (click)="router.navigate(['/planner'])">
+        Plan a trip here →
+      </button>
+    </div>
+
+    <div class="places-grid">
+      @for (place of filteredPlaces; track place.id) {
+        <div class="place-card">
+          <div class="place-image" [style.background-image]="place.photoUrl ? 'url(' + place.photoUrl + ')' : 'linear-gradient(135deg, #1a73e8, #0d47a1)'">
+            @if (!place.photoUrl) {
+              <span class="place-letter">{{ place.name[0] }}</span>
+            }
+          </div>
+
+          <div class="place-content">
+            <div class="place-header">
+              <h3>{{ place.name }}</h3>
+              <span class="rating">⭐ {{ place.rating }}</span>
+            </div>
+            <p>{{ place.description }}</p>
+            <div class="place-footer">
+              <span class="price price-{{ place.price_level }}">{{ place.price_level }}</span>
+              @if (place.open_hours) {
+                <span class="hours">🕐 {{ place.open_hours }}</span>
+              }
+              <button class="btn-save" (click)="savePlace(place.id)">♡ Save</button>
+            </div>
+            @if (place.photoCredit) {
+              <div class="photo-credit">📸 {{ place.photoCredit }}</div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

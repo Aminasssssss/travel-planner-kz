@@ -1,0 +1,40 @@
+<div class="page">
+  <nav class="navbar">
+    <div class="nav-brand" (click)="router.navigate(['/'])">🇰🇿 Travel KZ</div>
+    <div class="nav-links">
+      <a (click)="router.navigate(['/'])">Home</a>
+      <a (click)="router.navigate(['/planner'])">Plan Trip</a>
+      <a (click)="router.navigate(['/my-trips'])">My Trips</a>
+    </div>
+  </nav>
+
+  <div class="content">
+    <h1>All Destinations</h1>
+    <p class="subtitle">Explore the best cities in Kazakhstan</p>
+
+    <div class="cards-grid">
+      @for (dest of destinations; track dest.id) {
+        <div class="card" (click)="router.navigate(['/destinations', dest.id])">
+          <div class="card-img">{{ dest.name[0] }}</div>
+          <div class="card-body">
+            <h3>{{ dest.name }}</h3>
+            <p>{{ dest.description }}</p>
+            <div class="card-footer-old">
+              <span class="badge">{{ dest.season_best }}</span>
+              <span class="region">{{ dest.region }}</span>
+            </div>
+
+            <div class="card-footer">
+              <button (click)="$event.stopPropagation(); router.navigate(['/destinations', dest.id])">
+                📍 Места
+              </button>
+              <button class="btn-events-small" (click)="$event.stopPropagation(); router.navigate(['/city', dest.id, 'events'])">
+                🎭 Афиша
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

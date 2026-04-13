@@ -1,0 +1,97 @@
+<div class="app">
+
+  <nav class="navbar">
+    <div class="nav-brand" (click)="router.navigate(['/'])">
+      🇰🇿 Travel KZ
+    </div>
+    <div class="nav-links">
+      <a (click)="router.navigate(['/destinations'])">Destinations</a>
+      <a (click)="router.navigate(['/planner'])">Plan Trip</a>
+      @if (isLoggedIn()) {
+        <a (click)="router.navigate(['/my-trips'])">My Trips</a>
+        <button class="btn-outline" (click)="logout()">Logout</button>
+      } @else {
+        <button class="btn-outline" (click)="router.navigate(['/login'])">Login</button>
+        <button class="btn-primary" (click)="router.navigate(['/register'])">Sign Up</button>
+      }
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Discover Kazakhstan 🇰🇿</h1>
+      <p>Plan your perfect trip across steppes, mountains and ancient cities</p>
+      <button class="btn-hero" (click)="router.navigate(['/planner'])">
+        Plan My Trip →
+      </button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Popular Destinations</h2>
+    <div class="cards-grid">
+      @for (dest of destinations; track dest.id) {
+        <div class="card" (click)="router.navigate(['/destinations', dest.id])">
+          <div class="card-img">{{ dest.name[0] }}</div>
+          <div class="card-body">
+            <h3>{{ dest.name }}</h3>
+            <p>{{ dest.description }}</p>
+            <span class="badge">{{ dest.season_best }}</span>
+          </div>
+          <div class="card-actions">
+            <button (click)="$event.stopPropagation(); router.navigate(['/destinations', dest.id])">
+              📍 Места
+            </button>
+            <button class="btn-events-card" (click)="$event.stopPropagation(); router.navigate(['/city', dest.id, 'events'])">
+              🎭 Афиша
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="section-dark">
+    <div class="section-inner">
+      <h2>Top Places</h2>
+      <div class="places-grid">
+        @for (place of popularPlaces; track place.id) {
+          <div class="place-card">
+            <div class="place-rating">⭐ {{ place.rating }}</div>
+            <h4>{{ place.name }}</h4>
+            <p>{{ place.description }}</p>
+            <span class="price-badge price-{{ place.price_level }}">
+              {{ place.price_level }}
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">🏙️</div>
+        <h4>Choose a city</h4>
+        <p>Pick from Almaty, Astana, Turkestan and more</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">⚙️</div>
+        <h4>Set preferences</h4>
+        <p>Select days, budget and interests</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🗺️</div>
+        <h4>Get your plan</h4>
+        <p>Receive a day-by-day itinerary instantly</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>🇰🇿 Travel Planner KZ — KBTU Web Development 2026</p>
+  </footer>
+
+</div>

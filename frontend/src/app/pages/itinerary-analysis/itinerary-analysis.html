@@ -1,0 +1,190 @@
+<div class="page">
+  @if (successMessage) {
+    <div class="toast success">{{ successMessage }}</div>
+  }
+  @if (errorMessage) {
+    <div class="toast error">{{ errorMessage }}</div>
+  }
+
+  <nav class="navbar">
+    <div class="nav-brand" (click)="router.navigate(['/'])">🇰🇿 Travel KZ</div>
+    <div class="nav-links">
+      <a (click)="router.navigate(['/itinerary', itineraryId])">← Назад к маршруту</a>
+      <a (click)="router.navigate(['/my-trips'])">Мои поездки</a>
+    </div>
+  </nav>
+
+  @if (loading) {
+    <div class="loading">Загрузка анализа...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+    <div class="content">
+
+      <div class="page-header">
+        <h1>🔬 Анализ маршрута</h1>
+        <p class="subtitle">{{ itinerary?.destination?.name }} • {{ itinerary?.duration_days }} {{ itinerary?.duration_days === 1 ? 'день' : itinerary?.duration_days < 5 ? 'дня' : 'дней' }}</p>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>🧬 Оптимизация маршрута (Genetic Algorithm)</h2>
+        </div>
+
+        @if (!tspResult) {
+          <div class="card">
+            <p>Оптимизируйте порядок посещения мест, чтобы сократить время в пути.</p>
+            <button class="btn-primary" (click)="runOptimization()" [disabled]="tspLoading">
+              {{ tspLoading ? 'Оптимизация...' : '🔄 Запустить оптимизацию' }}
+            </button>
+          </div>
+        } @else {
+          <div class="card result-card">
+            <div class="comparison">
+              <div class="before">
+                <span class="label">Исходный маршрут</span>
+                <span class="value">{{ tspResult.total_original_distance }} км</span>
+                <span class="time">~{{ (tspResult.total_original_distance / 30) | number:'1.1-1' }} ч</span>
+              </div>
+              <div class="arrow">→</div>
+              <div class="after">
+                <span class="label">Оптимизированный</span>
+                <span class="value highlight">{{ tspResult.total_optimized_distance }} км</span>
+                <span class="time">~{{ (tspResult.total_optimized_distance / 30) | number:'1.1-1' }} ч</span>
+              </div>
+            </div>
+
+            <div class="improvement">
+              <span class="badge-success">🎉 Экономия {{ tspResult.total_improvement }}%</span>
+              <span class="saved">Сэкономлено {{ tspResult.total_time_saved_hours }} часов</span>
+            </div>
+
+            <div class="days-optimization">
+              <h3>Оптимизация по дням:</h3>
+              @for (day of tspResult.days; track day.day) {
+                <div class="day-result">
+                  <span>День {{ day.day }}:</span>
+                  <span>{{ day.original_distance }} км → {{ day.optimized_distance }} км</span>
+                  <span class="improvement-badge">-{{ day.improvement }}%</span>
+                </div>
+              }
+            </div>
+
+            <button class="btn-success" (click)="applyOptimization()">
+              💾 Применить оптимизацию
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>📊 Анализ загрузки (Burnout Detector)</h2>
+        </div>
+
+        @if (burnout) {
+          <div class="card">
+            <div class="days-burnout">
+              @for (day of burnout.days; track day.day_number) {
+                <div class="burnout-day" [class.overload]="day.level === 'overload'" [class.medium]="day.level === 'medium'">
+                  <div class="day-header">
+                    <span class="icon">{{ getBurnoutIcon(day.level) }}</span>
+                    <span class="day-title">День {{ day.day_number }}</span>
+                  </div>
+                  <div class="day-stats">
+                    <span>{{ day.places_count }} мест</span>
+                    <span>~{{ day.hours }} ч</span>
+                    <span>📏 {{ day.distance_km }} км</span>
+                  </div>
+                  @if (day.recommendation) {
+                    <div class="recommendation">{{ day.recommendation }}</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="overall-recommendation">
+              <strong>💡 Общая рекомендация:</strong> {{ burnout.overall_recommendation }}
+            </div>
+
+            <div class="summary">
+              <span>Всего мест: {{ burnout.total_places }}</span>
+              <span>Общее время: {{ burnout.total_hours }} ч</span>
+              <span>📏 {{ burnout.total_distance_km }} км</span>
+              <span>В среднем: {{ burnout.avg_hours_per_day || '—' }} ч/день</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>📈 Статистика маршрута</h2>
+        </div>
+
+        @if (stats) {
+          <div class="card stats-card">
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-value">{{ stats.total_places }}</span>
+                <span class="stat-label">Всего мест</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">⭐ {{ stats.avg_rating }}</span>
+                <span class="stat-label">Средний рейтинг</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">💰 {{ stats.total_budget | number }} ₸</span>
+                <span class="stat-label">Общий бюджет</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">⏱️ {{ stats.total_hours }} ч</span>
+                <span class="stat-label">Общее время</span>
+              </div>
+            </div>
+
+            <div class="categories">
+              <span class="cat-label">Категории:</span>
+              <span>{{ getCategoryIcons(stats.categories) }}</span>
+            </div>
+
+            <div class="indoor-outdoor">
+              <span>🏠 Внутри: {{ stats.indoor_count }}</span>
+              <span>🌤️ Снаружи: {{ stats.outdoor_count }}</span>
+              <span>🟢 Открыто: {{ stats.open_count }}</span>
+            </div>
+
+            <div class="parking-info">
+              <span>🅿️ Информация о парковках</span>
+              <span class="coming-soon">✨ Скоро будет доступно</span>
+            </div>
+
+            <div class="season-info">
+              <span>🌤️ Текущий сезон: {{ stats.current_season }}</span>
+              <span>✅ Подходит для: {{ stats.season_match }} из {{ stats.total_places }} мест ({{ stats.season_match_percent }}%)</span>
+            </div>
+
+            <div class="demand-info">
+              <span>🔥 Высокий спрос: {{ stats.high_demand }} мест</span>
+              <span>🟡 Средний: {{ stats.medium_demand }} мест</span>
+              <span>🟢 Низкий: {{ stats.low_demand }} мест</span>
+              <span class="tip">💡 Популярные места лучше посещать утром в будни</span>
+            </div>
+
+            <div class="steps-info">
+              <span>👟 Примерно {{ stats.total_steps | number }} шагов</span>
+              <span>📏 Общее расстояние: {{ stats.total_distance_km }} км</span>
+            </div>
+
+            <div class="time-info">
+              <span>🌅 Утро: {{ stats.morning_places }} мест</span>
+              <span>☀️ День: {{ stats.day_places_count }} мест</span>
+              <span>🌙 Вечер: {{ stats.evening_places }} мест</span>
+            </div>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+</div>

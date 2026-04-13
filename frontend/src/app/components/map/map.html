@@ -1,0 +1,10 @@
+<div style="position: relative;">
+  <div #mapContainer class="map-container"></div>
+
+  <button
+    (click)="toggleHeatmap()"
+    class="heatmap-toggle"
+  >
+    {{ showHeatmap ? '📍 Маркеры' : '🔥 Тепловая карта' }}
+  </button>
+</div>

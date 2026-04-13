@@ -1,0 +1,253 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.page {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.nav-brand {
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: #000;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links a {
+  cursor: pointer;
+  color: #666;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.15s;
+}
+
+.nav-links a:hover {
+  color: #000;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.page-header {
+  margin-bottom: 2.5rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 1rem;
+}
+
+/* Фильтры */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.filter-chip {
+  padding: 0.5rem 1.2rem;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 100px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-chip:hover {
+  border-color: #000;
+  color: #000;
+}
+
+.filter-chip.active {
+  background: #000;
+  color: white;
+  border-color: #000;
+}
+
+/* События */
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-card {
+  position: relative;
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #ebebeb;
+  transition: all 0.2s;
+}
+
+.event-card:hover {
+  border-color: #d0d0d0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.event-card.sponsored {
+  border-left: 4px solid #000;
+  background: #fdfdfd;
+}
+
+.sponsor-badge {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: #000;
+  color: white;
+  padding: 0.2rem 0.8rem;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.event-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.event-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.event-date {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #666;
+}
+
+.event-body {
+  margin-left: 3rem;
+}
+
+.event-body h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.description {
+  color: #888;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.event-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.price {
+  font-weight: 600;
+  color: #000;
+  font-size: 1rem;
+}
+
+.btn-ticket {
+  background: #000;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 100px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.btn-ticket:hover {
+  background: #333;
+  transform: translateY(-1px);
+}
+
+.btn-interest {
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  padding: 0.5rem 1.2rem;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-interest:hover {
+  border-color: #000;
+  color: #000;
+}
+
+.event-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #999;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 5rem;
+  font-size: 1rem;
+  color: #666;
+}
+
+.error {
+  color: #d32f2f;
+}

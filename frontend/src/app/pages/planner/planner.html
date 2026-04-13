@@ -1,0 +1,79 @@
+<div class="page">
+  <nav class="navbar">
+    <div class="nav-brand" (click)="router.navigate(['/'])">🇰🇿 Travel KZ</div>
+    <div class="nav-links">
+      <a (click)="router.navigate(['/'])">Home</a>
+      <a (click)="router.navigate(['/destinations'])">Destinations</a>
+      <a (click)="router.navigate(['/my-trips'])">My Trips</a>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div class="planner-card">
+      <h1>Plan Your Trip 🗺️</h1>
+      <p class="subtitle">Tell us your preferences and we'll build your perfect itinerary</p>
+
+      <div class="form-group">
+        <label>Choose a city</label>
+        <select [(ngModel)]="selectedDestination">
+          @for (dest of destinations; track dest.id) {
+            <option [value]="dest.id">{{ dest.name }}</option>
+          }
+        </select>
+        @if (selectedDestination) {
+          <a (click)="router.navigate(['/city', selectedDestination, 'events'])" class="events-link">
+            🎭 Смотреть афишу этого города →
+          </a>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>Duration: {{ selectedDays }} days</label>
+        <input type="range" min="1" max="10" [(ngModel)]="selectedDays" />
+        <div class="range-labels">
+          <span>1 day</span>
+          <span>10 days</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Budget</label>
+        <div class="budget-options">
+          <div class="budget-option" [class.active]="selectedBudget === 'budget'"
+               (click)="selectedBudget = 'budget'">
+            💚 Budget
+          </div>
+          <div class="budget-option" [class.active]="selectedBudget === 'mid'"
+               (click)="selectedBudget = 'mid'">
+            💛 Mid-range
+          </div>
+          <div class="budget-option" [class.active]="selectedBudget === 'luxury'"
+               (click)="selectedBudget = 'luxury'">
+            💎 Luxury
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Interests</label>
+        <div class="interests-grid">
+          @for (interest of interests; track interest.value) {
+            <div class="interest-chip"
+                 [class.active]="isSelected(interest.value)"
+                 (click)="toggleInterest(interest.value)">
+              {{ interest.label }}
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (error) {
+        <div class="error">{{ error }}</div>
+      }
+
+      <button class="btn-generate" (click)="generate()" [disabled]="loading">
+        {{ loading ? 'Generating your trip...' : 'Generate My Itinerary →' }}
+      </button>
+    </div>
+  </div>
+</div>

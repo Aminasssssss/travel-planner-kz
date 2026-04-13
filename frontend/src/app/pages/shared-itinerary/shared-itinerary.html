@@ -1,0 +1,29 @@
+<div class="page">
+  <nav class="navbar">
+    <div class="nav-brand">🇰🇿 Travel KZ</div>
+  </nav>
+
+  @if (loading) {
+    <p class="message">Загрузка...</p>
+  } @else if (error) {
+    <p class="message error">{{ error }}</p>
+  } @else if (itinerary) {
+    <div class="content">
+      <h1>{{ itinerary.title }}</h1>
+      <p class="meta">📍 {{ itinerary.destination?.name }} | 📅 {{ itinerary.duration_days }} дней | 💰 {{ itinerary.budget_level }}</p>
+
+      @for (day of itinerary.days; track day.id) {
+        <div class="day-card">
+          <h3>День {{ day.day_number }}</h3>
+          @for (place of day.places; track place.id) {
+            <div class="place-item">
+              <h4>{{ place.name }}</h4>
+              <p>{{ place.description }}</p>
+              <span class="rating">⭐ {{ place.rating }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,69 @@
+<div class="page">
+  <nav class="navbar">
+    <div class="nav-brand" (click)="router.navigate(['/'])">Travel KZ</div>
+    <div class="nav-links">
+      <a (click)="router.navigate(['/destinations', cityId])">← Назад</a>
+      <a (click)="router.navigate(['/planner'])">Планер</a>
+      <a (click)="router.navigate(['/my-trips'])">Поездки</a>
+    </div>
+  </nav>
+
+  @if (loading) {
+    <div class="loading">Загрузка...</div>
+  } @else if (error) {
+    <div class="error">{{ error }}</div>
+  } @else {
+    <div class="content">
+      <div class="page-header">
+        <h1>{{ city?.name }}</h1>
+        <p class="subtitle">События и мероприятия</p>
+      </div>
+
+      <div class="filters">
+        <button class="filter-chip" [class.active]="!selectedCategory" (click)="clearFilter()">
+          Все
+        </button>
+        @for (cat of categories; track cat) {
+          <button class="filter-chip" [class.active]="selectedCategory === cat" (click)="filterByCategory(cat)">
+            {{ getCategoryLabel(cat) }}
+          </button>
+        }
+      </div>
+
+      @if (filteredEvents.length === 0) {
+        <div class="empty">Нет событий</div>
+      } @else {
+        <div class="events-list">
+          @for (event of filteredEvents; track event.id) {
+            <div class="event-card" [class.sponsored]="event.is_sponsored">
+              @if (event.is_sponsored) {
+                <div class="sponsor-badge">{{ event.sponsor_label }}</div>
+              }
+
+              <div class="event-header">
+                <span class="event-icon">{{ getCategoryIcon(event.category) }}</span>
+                <span class="event-date">{{ formatDate(event.date, event.time) }}</span>
+              </div>
+
+              <div class="event-body">
+                <h3>{{ event.title }}</h3>
+                <div class="location">📍 {{ event.location }}</div>
+                <p class="description">{{ event.description }}</p>
+              </div>
+
+              <div class="event-footer">
+                <span class="price">от {{ event.price_from }} ₸</span>
+                <div class="event-actions">
+                  <button class="btn-interest">Интересно</button>
+                  @if (event.ticket_url) {
+                    <a [href]="event.ticket_url" target="_blank" class="btn-ticket">Билеты</a>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

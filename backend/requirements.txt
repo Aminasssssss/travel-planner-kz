@@ -1,0 +1,15 @@
+asgiref==3.11.1
+Django==5.2.13
+django-cors-headers==4.9.0
+djangorestframework==3.17.1
+djangorestframework_simplejwt==5.5.1
+PyJWT==2.12.1
+sqlparse==0.5.5
+numpy==2.2.6
+pandas==2.2.3
+scikit-learn==1.6.1
+openpyxl==3.1.5
+requests==2.32.4
+anthropic==0.40.0
+geopy==2.4.1
+python-dotenv==1.0.1

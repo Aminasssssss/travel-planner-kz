@@ -1,0 +1,41 @@
+<div class="ai-chat">
+  <div class="chat-header" (click)="toggleChat()">
+    <span>🤖 AI Гид по Казахстану</span>
+    <span>{{ isOpen ? '▼' : '▲' }}</span>
+  </div>
+
+  @if (isOpen) {
+    <div class="chat-body">
+      <div class="messages" #messagesContainer>
+        @for (msg of messages; track msg.id) {
+          <div class="message" [class.user]="msg.isUser" [class.ai]="!msg.isUser">
+            {{ msg.text }}
+          </div>
+        }
+        @if (loading) {
+          <div class="message ai">
+            <div class="typing">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="chat-input">
+        <input
+          [(ngModel)]="question"
+          placeholder="Спросите о местах..."
+          (keyup.enter)="ask()"
+          [disabled]="loading"
+        />
+        <button (click)="ask()" [disabled]="loading || !question.trim()">➤</button>
+      </div>
+
+      <div class="chat-suggestions">
+        <span (click)="setQuestion('Что посмотреть за 1 день?')">📅 1 день</span>
+        <span (click)="setQuestion('Где вкусно поесть?')">🍽️ Где поесть</span>
+        <span (click)="setQuestion('Романтические места')">💕 Романтика</span>
+      </div>
+    </div>
+  }
+</div>
