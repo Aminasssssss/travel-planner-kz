@@ -69,6 +69,7 @@ API: http://localhost:8000/api/
 
 ## Project Structure
 
+```
 travel-planner-kz/
 ├── backend/
 │   ├── config/
@@ -83,6 +84,7 @@ travel-planner-kz/
 │       ├── components/
 │       └── services/
 └── README.md
+```
 
 ## Notes
 
